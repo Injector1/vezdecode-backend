@@ -1,0 +1,6 @@
+/.idea
+/node_modules
+package-lock.json
+Dockerfile
+docker-compose.yml
+/mysql/docker-compose.yml

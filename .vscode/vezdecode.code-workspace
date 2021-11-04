@@ -1,0 +1,12 @@
+{
+  "folders": [
+    {
+      "name": "testing",
+      "path": "../testing-scripts"
+    },
+    {
+      "name": "backend",
+      "path": "../vezdecode-backend-track"
+    }
+  ]
+}

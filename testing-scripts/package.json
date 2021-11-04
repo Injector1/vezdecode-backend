@@ -1,0 +1,11 @@
+{
+  "name": "testing-scripts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "node-fetch": "^3.0.0"
+  }
+}
