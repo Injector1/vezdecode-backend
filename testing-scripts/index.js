@@ -7,10 +7,10 @@ const getFileBuffer = (path) => {
   return fs.readFileSync(path);
 }
 
-const uploadImage = async (path) => {
+const uploadImage = async (baseURL, path) => {
   const formData = new FormData();
   formData.append('file', fs.createReadStream(path));
-  return await fetch('http://localhost:3000/images/upload', {
+  return await fetch(baseURL + `upload`, {
     method: 'POST',
     body: formData,
   })
@@ -18,8 +18,8 @@ const uploadImage = async (path) => {
     .catch((e) => e);
 };
 
-const getImage = async (imageId) => {
-  return await fetch(`http://localhost:3000/images/get?id=${imageId}`, {
+const getImage = async (baseURL, imageId) => {
+  return await fetch(baseURL + `get?id=${imageId}`, {
     method: 'GET',
   })
     .then(async (res) => await res.buffer())
@@ -27,8 +27,9 @@ const getImage = async (imageId) => {
 };
 
 
-const moduleTesting = async (pathToUploadingFile, pathToFileToCompare) => {
-  const response = await uploadImage(pathToUploadingFile);
+const moduleTesting = async (pathToUploadingFile, pathToFileToCompare, serverHost, serverPort) => {
+  const baseURL = `http://${serverHost}:${serverPort}/images/`
+  const response = await uploadImage(baseURL, pathToUploadingFile);
   console.log(response)
 
   if (response.statusCode === 400) {
@@ -38,12 +39,18 @@ const moduleTesting = async (pathToUploadingFile, pathToFileToCompare) => {
 
   if (response.id) {
     const {id} = response;
-    const firstBuffer = await getImage(id);
-    console.log(Buffer.compare(firstBuffer, getFileBuffer(pathToFileToCompare)) === 0)
-    return true;
+    const firstBuffer = await getImage(baseURL, id);
+    return Buffer.compare(firstBuffer, getFileBuffer(pathToFileToCompare)) === 0;
   }
   return false;
 
 }
 
-moduleTesting('/home/injector/Pictures/Screenshot from 2021-01-09 20-07-19.jpg', '/home/injector/Pictures/Screenshot from 2021-01-09 20-07-30.jpeg')
+// Configuring paths to files
+let pathToUploadingFile = '/home/injector/Pictures/Screenshot from 2021-01-09 20-07-19.jpg'
+let pathToFileToCompare = '/home/injector/Pictures/Screenshot from 2021-01-09 20-07-19.jpg'
+
+// Configuring server info
+let serverHost = 'localhost'
+let serverPort = '3000'
+console.log(await moduleTesting(pathToUploadingFile, pathToFileToCompare, serverHost, serverPort))
